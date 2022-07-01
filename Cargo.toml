@@ -13,7 +13,7 @@ cortex-m = "0.7.4"
 cortex-m-rt = "0.7"
 rtt-target = { version = "0.3", features = ["cortex-m"] }
 embedded-hal = "0.2"
-nw-board-support = { path = "../board-support" }
+nw-board-support = { git = "https://github.com/nw-rs/board-support.git" }
 usbd-dfu = "0.2"
 usb-device = "0.2"
 
