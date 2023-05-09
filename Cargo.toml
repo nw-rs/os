@@ -8,14 +8,16 @@ description = "An operating system for the Numworks n0110 calculator."
 repository = "https://github.com/willemml/rustworks"
 homepage = "https://github.com/willemml/rustworks"
 
+[net]
+git-fetch-with-cli = true
+
 [dependencies]
-cortex-m = "0.7.4"
+cortex-m = "0.7"
 cortex-m-rt = "0.7"
+cortex-m-semihosting = "0.5"
 rtt-target = { version = "0.3", features = ["cortex-m"] }
 embedded-hal = "0.2"
 nw-board-support = { git = "https://github.com/nw-rs/board-support.git" }
-usbd-dfu = "0.2"
-usb-device = "0.2"
 
 [[bin]]
 name = "rustworks"

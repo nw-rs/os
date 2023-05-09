@@ -4,47 +4,30 @@
 
 extern crate cortex_m_rt as rt;
 
-use nw_board_support::hal::{self, timer::SysTimerExt};
-
-use embedded_hal::prelude::_embedded_hal_blocking_delay_DelayMs;
 use rt::entry;
 
 use core::panic::PanicInfo;
 
-use nw_board_support::*;
+use cortex_m_semihosting::hprintln;
+
+pub const HSE: u32 = 8;
+pub const PLL_M: u8 = 8;
+pub const PLL_N: u16 = 384;
+pub const PLL_P: u32 = 2;
+pub const PLL_Q: u8 = 8;
+pub const SYSCLK: u32 = 192_000_000;
 
 #[inline(never)]
 #[panic_handler]
-fn panic(_info: &PanicInfo) -> ! {
-    //rprintln!("{}", info);
+fn panic(info: &PanicInfo) -> ! {
+    hprintln!("{:?}", info);
     loop {}
 }
 
 #[entry]
 fn main() -> ! {
-    let mut led = get_led();
-    led.blue();
-
-    let dp = hal::pac::Peripherals::take().unwrap();
-    let cp = cortex_m::Peripherals::take().unwrap();
-
-    init_mpu();
-
-    let clocks = init_clocks(dp.RCC);
-
-    let mut display = get_display(&clocks);
-
-    display.write_top("Booted OS.");
-    display.draw_all();
-
-    let mut delay = cp.SYST.delay(&clocks);
-
-    let mut led = get_led();
-
+    hprintln!("entered external");
     loop {
-        led.green();
-        delay.delay_ms(250u32);
-        led.off();
-        delay.delay_ms(250u32);
+        cortex_m::asm::nop();
     }
 }
