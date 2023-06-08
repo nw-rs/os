@@ -1,33 +1,61 @@
-#![no_std]
 #![no_main]
+#![no_std]
 #![allow(dead_code)]
+#![feature(type_alias_impl_trait)]
 
-extern crate cortex_m_rt as rt;
+use rustworks as _;
 
-use rt::entry;
+#[rtic::app(
+    device = nw_board_support::pac,
+    dispatchers = []
+)]
+mod app {
+    // Shared resources go here
+    #[shared]
+    struct Shared {
+        display: nw_board_support::display::Display
+    }
 
-use core::panic::PanicInfo;
+    // Local resources go here
+    #[local]
+    struct Local {
+        // TODO: Add resources
+    }
 
-use cortex_m_semihosting::hprintln;
+    #[init]
+    fn init(_cx: init::Context) -> (Shared, Local) {
+        defmt::info!("init");
 
-pub const HSE: u32 = 8;
-pub const PLL_M: u8 = 8;
-pub const PLL_N: u16 = 384;
-pub const PLL_P: u32 = 2;
-pub const PLL_Q: u8 = 8;
-pub const SYSCLK: u32 = 192_000_000;
+        nw_board_support::clocks::init_clocks();
 
-#[inline(never)]
-#[panic_handler]
-fn panic(info: &PanicInfo) -> ! {
-    hprintln!("{:?}", info);
-    loop {}
-}
+        nw_board_support::led::init();
+        nw_board_support::led::set(true, true, true);
 
-#[entry]
-fn main() -> ! {
-    hprintln!("entered external");
-    loop {
-        cortex_m::asm::nop();
+        let mut display = nw_board_support::display::Display::new(nw_board_support::clocks::HCLK);
+
+        display.set_backlight(255);
+
+        display.write_top("Hello from RustWorks!");
+
+        display.draw_top(false);
+
+        (
+            Shared {
+                display
+            },
+            Local {
+                // Initialization of local resources go here
+            },
+        )
+    }
+
+    // Optional idle, can be removed if not needed.
+    #[idle]
+    fn idle(_: idle::Context) -> ! {
+        defmt::info!("idle");
+
+        loop {
+            continue;
+        }
     }
 }

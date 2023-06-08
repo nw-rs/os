@@ -8,15 +8,12 @@ description = "An operating system for the Numworks n0110 calculator."
 repository = "https://github.com/willemml/rustworks"
 homepage = "https://github.com/willemml/rustworks"
 
-[net]
-git-fetch-with-cli = true
-
 [dependencies]
-cortex-m = "0.7"
-cortex-m-rt = "0.7"
-cortex-m-semihosting = "0.5"
-rtt-target = { version = "0.3", features = ["cortex-m"] }
-embedded-hal = "0.2"
+cortex-m = { version = "0.7", features = ["critical-section-single-core"] }
+defmt = { version = "0.3", features = ["encoding-rzcobs"] }
+defmt-brtt = { version = "0.1", default-features = false, features = ["rtt"] }
+panic-probe = { version = "0.3", features = ["print-defmt"] }
+rtic = { version = "2.0.0", features = [ "thumbv7-backend" ] }
 nw-board-support = { git = "https://github.com/nw-rs/board-support.git" }
 
 [[bin]]
